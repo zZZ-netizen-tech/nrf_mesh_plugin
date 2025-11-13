@@ -310,9 +310,8 @@ private extension DoozMeshManagerApi {
                 let element = node?.element(withAddress: Address(exactly: data.elementId)!)
                 let model = element?.model(withModelId: UInt32(data.modelId))
                 let appKey = meshNetworkManager.meshNetwork?.applicationKeys[KeyIndex(data.appKeyIndex)]
-                
+                debugPrint("🥂 [\(appKey)] 1234Sent ConfigModelAppBind\(model)")
                 if let _appKey = appKey, let _model = model{
-                    
                     if let configModelAppBind = ConfigModelAppBind(applicationKey: _appKey, to: _model){
                         try _ =  meshNetworkManager.send(configModelAppBind, to: node!)
                         result(nil)

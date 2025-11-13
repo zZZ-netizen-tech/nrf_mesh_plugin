@@ -194,6 +194,7 @@ enum EventSinkKeys: String{
                 case modelId
                 case subscribedAddresses
                 case boundAppKey
+                case modelName
             }
         }
     }

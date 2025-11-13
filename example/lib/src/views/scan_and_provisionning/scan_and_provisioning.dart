@@ -51,12 +51,16 @@ class _ScanningAndProvisioningState extends State<ScanningAndProvisioning> {
     await checkAndAskPermissions();
     _scanSubscription = widget.nordicNrfMesh.scanForUnprovisionedNodes().listen((device) async {
       if (_devices.every((d) => d.id != device.id)) {
-        final deviceUuid =
-            Uuid.parse(_meshManagerApi.getDeviceUuid(device.serviceData[meshProvisioningUuid]!.toList()));
-        debugPrint('deviceUuid: $deviceUuid');
-        _serviceData[device.id] = deviceUuid;
-        _devices.add(device);
-        setState(() {});
+        final serviceData = device.serviceData[meshProvisioningUuid];
+        if (serviceData != null) {
+          final deviceUuid = Uuid.parse(_meshManagerApi.getDeviceUuid(serviceData.toList()));
+          debugPrint('deviceUuid: $deviceUuid');
+          _serviceData[device.id] = deviceUuid;
+          _devices.add(device);
+          setState(() {});
+        } else {
+          debugPrint('serviceData for meshProvisioningUuid is null, skip device: ${device.id}');
+        }
       }
     });
     setState(() {

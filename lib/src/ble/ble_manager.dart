@@ -143,6 +143,9 @@ abstract class BleManager<E extends BleManagerCallbacks> {
       }
       _connectedDeviceStatusListener!.cancel();
     });
+
+    //先初始化 防止接收回调的时候_device还没有赋值
+    _device = discoveredDevice;
     _connectedDeviceStatusListener = _bleInstance
         .connectToDevice(
           id: discoveredDevice.id,

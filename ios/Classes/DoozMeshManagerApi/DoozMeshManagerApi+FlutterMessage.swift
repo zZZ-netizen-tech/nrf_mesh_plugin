@@ -12,8 +12,9 @@ extension DoozMeshManagerApi {
         guard let _eventSink = self.eventSink else {
             return
         }
-        
-        _eventSink(message)
+        DispatchQueue.main.async {
+            _eventSink(message)
+        }
     }
 }
 

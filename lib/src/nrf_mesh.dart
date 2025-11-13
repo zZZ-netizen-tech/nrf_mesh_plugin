@@ -25,8 +25,8 @@ class NordicNrfMesh {
     return version;
   }
 
-  /// {@macro ble_scanner}
-  late final BleScanner _bleScanner = BleScanner();
+  /// {@macro ble_scanner} modify by 2025-11-11 去掉late加载 由于flutter_reactive_ble插件中初始化和scan方法一起调用会有冲突
+  final BleScanner _bleScanner = BleScanner();
 
   /// {@macro mesh_manager_api}
   MeshManagerApi get meshManagerApi => _meshManagerApi;

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
@@ -113,7 +114,8 @@ class _ModuleState extends State<Module> {
       final elements = await node.elements;
       for (final element in elements) {
         for (final model in element.models) {
-          if (model.boundAppKey.isEmpty) {
+          //modify by 2025-11-13  skip configuration server and configuration client
+          if (model.boundAppKey.isEmpty && model.modelId != 0x0000 && model.modelId != 0x0001) {
             if (element == elements.first && model == element.models.first) {
               continue;
             }

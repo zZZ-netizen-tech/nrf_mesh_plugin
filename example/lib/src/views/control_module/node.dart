@@ -46,17 +46,19 @@ class _NodeState extends State<Node> {
     );
     if (!isLoading) {
       body = ListView(
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
         children: [
-          Text('Node $nodeAddress'),
-          Text(widget.node.uuid),
-          ...[
-            const Text('Elements :'),
-            Column(
-              children: <Widget>[
-                ...elements.map((element) => MeshElement(element)).toList(),
-              ],
+          Card(
+            margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 6.0),
+            child: ListTile(
+              leading: const Icon(Icons.router),
+              title: Text('Node address: $nodeAddress'),
+              subtitle: Text(widget.node.uuid),
             ),
-          ],
+          ),
+          const SizedBox(height: 6),
+          // One section (card) per element
+          ...elements.map((element) => MeshElement(element)).toList(),
         ],
       );
     }

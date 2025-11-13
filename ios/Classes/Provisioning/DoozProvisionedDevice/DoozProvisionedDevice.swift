@@ -84,7 +84,8 @@ private extension DoozProvisionedDevice {
                             },
                             EventSinkKeys.meshNode.elements.model.boundAppKey.rawValue : model.boundApplicationKeys.map{ key in
                                 return key.index
-                            }
+                            },
+                            EventSinkKeys.meshNode.elements.model.modelName.rawValue : model.name ?? "unnamed model",
                             
                         ]
                         

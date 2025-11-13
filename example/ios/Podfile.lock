@@ -42,17 +42,18 @@ PODS:
     - nRFMeshProvision
   - nRFMeshProvision (3.2.0):
     - CryptoSwift (= 1.5.1)
-  - permission_handler_apple (9.0.4):
+  - permission_handler_apple (9.3.0):
     - Flutter
-  - Protobuf (3.21.11)
+  - Protobuf (3.29.5)
   - reactive_ble_mobile (0.0.1):
     - Flutter
+    - FlutterMacOS
     - Protobuf (~> 3.5)
     - SwiftProtobuf (~> 1.0)
   - SDWebImage (5.14.2):
     - SDWebImage/Core (= 5.14.2)
   - SDWebImage/Core (5.14.2)
-  - SwiftProtobuf (1.20.3)
+  - SwiftProtobuf (1.33.3)
   - SwiftyGif (5.4.3)
 
 DEPENDENCIES:
@@ -62,7 +63,7 @@ DEPENDENCIES:
   - nordic_nrf_mesh (from `.symlinks/plugins/nordic_nrf_mesh/ios`)
   - nRFMeshProvision (from `.symlinks/plugins/nordic_nrf_mesh/IOS-nRF-Mesh-Library`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
-  - reactive_ble_mobile (from `.symlinks/plugins/reactive_ble_mobile/ios`)
+  - reactive_ble_mobile (from `.symlinks/plugins/reactive_ble_mobile/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -88,24 +89,24 @@ EXTERNAL SOURCES:
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   reactive_ble_mobile:
-    :path: ".symlinks/plugins/reactive_ble_mobile/ios"
+    :path: ".symlinks/plugins/reactive_ble_mobile/darwin"
 
 SPEC CHECKSUMS:
   CryptoSwift: c4f2debceb38bf44c80659afe009f71e23e4a082
-  device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
+  device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
-  file_picker: 817ab1d8cd2da9d2da412a417162deee3500fc95
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  nordic_nrf_mesh: 469eac5b312f1e29c2da8f0c7c85c8d576f823bd
+  file_picker: a0560bc09d61de87f12d246fc47d2119e6ef37be
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  nordic_nrf_mesh: 31990fec043cf8f43c28e3a0901b07dffd0e0d15
   nRFMeshProvision: 0f0a0b9e83e4a77bb4df1b7dfdb3838f526875d0
-  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
-  Protobuf: 3acb308a1e208605afd50866b98ec220141bcb8c
-  reactive_ble_mobile: 9ce6723d37ccf701dbffd202d487f23f5de03b4c
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
+  Protobuf: 164aea2ae380c3951abdc3e195220c01d17400e0
+  reactive_ble_mobile: ea97709e18fa6f0b0592909725d7ae7e1c595b64
   SDWebImage: b9a731e1d6307f44ca703b3976d18c24ca561e84
-  SwiftProtobuf: b02b5075dcf60c9f5f403000b3b0c202a11b6ae1
+  SwiftProtobuf: e1b437c8e31a4c5577b643249a0bb62ed4f02153
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
 
-PODFILE CHECKSUM: 128b388d0d827f7e3f8a3286f565f4414fc370a7
+PODFILE CHECKSUM: ac6f710b94220fc08721136b4a77e1ea242ce06f
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.16.2
