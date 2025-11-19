@@ -59,10 +59,21 @@ class _ProvisionedDevicesState extends State<ProvisionedDevices> {
                 children: [
                   for (var i = 0; i < _devices.length; i++)
                     Device(
-                      key: ValueKey('device-$i'),
+                      // use a stable key so Flutter can correctly preserve/recreate widgets
+                      key: ValueKey(_devices.elementAt(i).id),
                       device: _devices.elementAt(i),
                       onTap: () async {
-                        _device = _devices.elementAt(i);
+                        final selected = _devices.elementAt(i);
+                        // stop scanning and update state so UI shows the Module
+                        await _stopScan();
+                        if (!mounted) {
+                          debugPrint('onTap: widget not mounted after stopScan');
+                          return;
+                        }
+                        setState(() {
+                          _device = selected;
+                        });
+                        // return early: we intentionally stop here to let UI switch to Module
                         return;
                         final bleMeshManager = BleMeshManager();
                         final device = _devices.elementAt(i);
@@ -105,10 +116,14 @@ class _ProvisionedDevicesState extends State<ProvisionedDevices> {
         ] else
           Expanded(
             child: Module(
+                key: ValueKey(_device!.id),
                 device: _device!,
                 meshManagerApi: _meshManagerApi,
                 onDisconnect: () {
-                  _device = null;
+                  // clear the selected device and restart scanning
+                  setState(() {
+                    _device = null;
+                  });
                   _scanProvisionned();
                 }),
           ),

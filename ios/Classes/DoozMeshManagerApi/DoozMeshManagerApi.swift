@@ -731,7 +731,7 @@ private extension DoozMeshManagerApi{
             let _network = try meshNetworkManager.import(from: data)
             
             if (doozMeshNetwork == nil || doozMeshNetwork?.meshNetwork.uuid != _network.uuid) {
-                doozMeshNetwork = DoozMeshNetwork(messenger: messenger, network: _network)
+                doozMeshNetwork = DoozMeshNetwork(messenger: messenger, network: _network,meshNetworkManager: self.meshNetworkManager)
             } else {
                 doozMeshNetwork?.meshNetwork = _network
             }
@@ -845,7 +845,7 @@ extension DoozMeshManagerApi: DoozMeshManagerApiDelegate{
     func onNetworkLoaded(_ network: MeshNetwork) {
         
         if (doozMeshNetwork == nil || doozMeshNetwork?.meshNetwork.uuid != network.uuid) {
-            doozMeshNetwork = DoozMeshNetwork(messenger: messenger, network: network)
+            doozMeshNetwork = DoozMeshNetwork(messenger: messenger, network: network,meshNetworkManager: self.meshNetworkManager)
         } else {
             doozMeshNetwork?.meshNetwork = network
         }
@@ -871,34 +871,37 @@ extension DoozMeshManagerApi: DoozMeshManagerApiDelegate{
     }
     
     func onNetworkUpdated(_ network: MeshNetwork) {
-                
+        print("onNetworkUpdated: \(network.uuid.uuidString)")
         doozMeshNetwork?.meshNetwork = network
-        
+        // 持久化 mesh network 到本地，保证 Mesh网络数据发生变更 后数据不会丢失
+        do {
+            _ = meshNetworkManager.save()
+        } catch {
+            print("Failed to save mesh network after update: \(error)")
+        }
         let message: FlutterMessage = [
             EventSinkKeys.eventName.rawValue : MeshNetworkApiEvent.onNetworkUpdated.rawValue,
             EventSinkKeys.id.rawValue : network.uuid.uuidString
         ]
-        
         _sendFlutterMessage(message)
     }
-    
+
     func onNetworkImported(_ network: MeshNetwork) {
-        
+
         let message: FlutterMessage = [
             EventSinkKeys.eventName.rawValue : MeshNetworkApiEvent.onNetworkImported.rawValue,
             EventSinkKeys.id.rawValue : network.uuid.uuidString
         ]
         
         _sendFlutterMessage(message)
-        
     }
-    
+
     func onNetworkImportFailed(_ error: Error) {
         let message: FlutterMessage = [
             EventSinkKeys.eventName.rawValue : MeshNetworkApiEvent.onNetworkImportFailed.rawValue,
             EventSinkKeys.error.rawValue : error
-        ] 
-        
+        ]
+
         _sendFlutterMessage(message)
     }
     

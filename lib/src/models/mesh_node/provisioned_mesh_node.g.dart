@@ -8,11 +8,11 @@ part of 'provisioned_mesh_node.dart';
 
 ModelData _$ModelDataFromJson(Map json) {
   return ModelData(
-    json['key'] as int,
-    json['modelId'] as int,
+    json['key'] as int? ?? 0,
+    json['modelId'] as int? ?? 0,
     (json['subscribedAddresses'] as List<dynamic>).map((e) => e as int).toList(),
     (json['boundAppKey'] as List<dynamic>).map((e) => e as int).toList(),
-    json['modelName'] as String,
+    json['modelName'] as String? ?? '',
   );
 }
 

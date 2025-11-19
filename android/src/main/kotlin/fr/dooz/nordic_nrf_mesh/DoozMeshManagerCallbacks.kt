@@ -9,7 +9,7 @@ import no.nordicsemi.android.mesh.MeshManagerCallbacks
 import no.nordicsemi.android.mesh.MeshNetwork
 import no.nordicsemi.android.mesh.provisionerstates.UnprovisionedMeshNode
 
-class DoozMeshManagerCallbacks(private val binaryMessenger: BinaryMessenger, var eventSink : EventChannel.EventSink?) : MeshManagerCallbacks {
+class DoozMeshManagerCallbacks(private val binaryMessenger: BinaryMessenger, private val meshManagerApi: MeshManagerApi, var eventSink : EventChannel.EventSink?) : MeshManagerCallbacks {
     private var doozMeshNetwork: DoozMeshNetwork? = null
 
     var mtuSize: Int = -1

@@ -6,5 +6,5 @@
 //
 
 struct GetElementsForGroupArguments: BaseFlutterArguments {
-    let address: Int16
+    let groupAddress: Int
 }

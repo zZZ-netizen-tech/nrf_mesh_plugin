@@ -6,10 +6,12 @@ import 'package:nordic_nrf_mesh_example/src/views/control_module/provisioned_dev
 import 'package:nordic_nrf_mesh_example/src/views/home/home.dart';
 import 'package:nordic_nrf_mesh_example/src/views/scan_and_provisionning/scan_and_provisioning.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:nordic_nrf_mesh_example/src/views/group/tab_group.dart';
 
 const int homeTab = 0;
 const int provisioningTab = 1;
 const int controlTab = 2;
+const int groupTab = 3;
 // used for app's theme
 const Map<int, Color> primarySwatch = {
   50: Color.fromRGBO(0, 164, 153, .1),
@@ -57,6 +59,9 @@ class _NordicNrfMeshExampleAppState extends State<NordicNrfMeshExampleApp> {
     } else if (_bottomNavigationBarIndex == controlTab) {
       //  List provisioned devices and then can control/setup them
       body = ProvisionedDevices(nordicNrfMesh: nordicNrfMesh);
+    } else if (_bottomNavigationBarIndex == groupTab) {
+      // Groups view
+      body = GroupsPage(nordicNrfMesh: nordicNrfMesh);
     }
 
     return MaterialApp(
@@ -73,6 +78,10 @@ class _NordicNrfMeshExampleAppState extends State<NordicNrfMeshExampleApp> {
           appBar: AppBar(),
           body: body,
           bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Theme.of(context).primaryColorDark,
+            unselectedItemColor: Colors.grey,
+            showUnselectedLabels: true,
             currentIndex: _bottomNavigationBarIndex,
             onTap: (newBottomNavigationBarIndex) {
               if (nordicNrfMesh.meshManagerApi.meshNetwork != null) {
@@ -97,6 +106,10 @@ class _NordicNrfMeshExampleAppState extends State<NordicNrfMeshExampleApp> {
                 icon: Icon(Icons.videogame_asset),
                 label: 'Control',
               ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.group),
+                label: 'Groups',
+              ),
             ],
           ),
         ),
@@ -110,7 +123,7 @@ void log(Object? msg) => debugPrint('[$NordicNrfMeshExampleApp - ${DateTime.now(
 Future<void> checkAndAskPermissions() async {
   if (defaultTargetPlatform == TargetPlatform.android) {
     final androidInfo = await DeviceInfoPlugin().androidInfo;
-    if (androidInfo.version.sdkInt! < 31) {
+    if (androidInfo.version.sdkInt < 31) {
       // location
       await Permission.locationWhenInUse.request();
       await Permission.locationAlways.request();

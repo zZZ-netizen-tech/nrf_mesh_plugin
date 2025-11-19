@@ -9,19 +9,20 @@ import Foundation
 import nRFMeshProvision
 
 class DoozMeshNetwork: NSObject{
-    
+
     //MARK: Public properties
     var meshNetwork: MeshNetwork
-    
+    var meshNetworkManager: MeshNetworkManager // 新增属性
     //MARK: Private properties
     private let messenger: FlutterBinaryMessenger
-    
-    init(messenger: FlutterBinaryMessenger, network: MeshNetwork) {
+
+    init(messenger: FlutterBinaryMessenger, network: MeshNetwork, meshNetworkManager: MeshNetworkManager) {
         self.meshNetwork = network
         self.messenger = messenger
-        
+        self.meshNetworkManager = meshNetworkManager // 初始化
+
         super.init()
-        
+
         _initChannel(messenger: messenger, networkId: network.uuid.uuidString)
     }
     
@@ -132,6 +133,7 @@ private extension DoozMeshNetwork {
                 do{
                     let group = try Group(name: data.name, address: address)
                     try meshNetwork.add(group: group)
+                        _ = meshNetworkManager.save()
                     result(
                         [
                             "group" : [
@@ -173,6 +175,7 @@ private extension DoozMeshNetwork {
                 
                 do{
                     try meshNetwork.remove(group: group)
+                    _ = meshNetworkManager.save()
                     result(true)
                 }
                 catch{
@@ -185,36 +188,46 @@ private extension DoozMeshNetwork {
             }else{
                 result(false)
             }
-                        
+
         case .getElementsForGroup(let data):
-            if let group = meshNetwork.group(withAddress: MeshAddress(Address(exactly: data.address)!)){
+            if let group = meshNetwork.group(withAddress: MeshAddress(Address(exactly: data.groupAddress)!)) {
                 let models = meshNetwork.models(subscribedTo: group)
-                let elements = models.compactMap { model in
-                    return model.parentElement
-                }
-                
-                let mappedElements = elements.map { element in
+                let elements = models.compactMap { $0.parentElement }
+
+                let mappedElements = elements.map { element -> [String: Any] in
+                    // 仅取属于该 element 的 models
+                    let elementModels = models.filter { $0.parentElement == element }
+
+                    let mappedModels = elementModels.map { m -> [String: Any] in
+                        let subscribed = m.subscriptions.map { sub -> Int in
+                            // 将 MeshAddress 转为 Int
+                            return Int(sub.address.address)
+                        }
+                        let boundKeys = m.boundApplicationKeys.map { key -> Int in
+                            return Int(key.index)
+                        }
+                        return [
+                            "modelId": m.modelIdentifier,
+                            "subscribedAddresses": subscribed,
+                            "boundAppKey": boundKeys
+                        ]
+                    }
+
                     return [
-                        "name" : element.name ?? "",
-                        "address" : element.unicastAddress,
-                        "locationDescriptor" : element.location,
-                        "models" : models.filter({$0.parentElement == element}).map({ m in
-                            return [
-                                "subscribedAddresses" : m.subscriptions.map({ s in
-                                    return s.address
-                                }),
-                                "boundAppKey" : m.boundApplicationKeys.map{ key in
-                                    return key.index
-                                }
-                            ]
-                        })
+                        "key": element.index,
+                        "name": element.name ?? "",
+                        // 将非桥接类型显式转换为 Int
+                        "address": Int(element.unicastAddress),
+                        "locationDescriptor": Int(element.location.rawValue),
+                        "models": mappedModels
                     ]
                 }
-                
+
                 result(mappedElements)
-            }else{
+            } else {
                 result(false)
             }
+
 
         case .getProvisionersAsJson:
 
