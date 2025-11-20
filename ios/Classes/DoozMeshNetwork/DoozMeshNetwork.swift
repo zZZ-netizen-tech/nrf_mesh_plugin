@@ -203,13 +203,12 @@ private extension DoozMeshNetwork {
                             // 将 MeshAddress 转为 Int
                             return Int(sub.address.address)
                         }
-                        let boundKeys = m.boundApplicationKeys.map { key -> Int in
-                            return Int(key.index)
-                        }
                         return [
                             "modelId": m.modelIdentifier,
                             "subscribedAddresses": subscribed,
-                            "boundAppKey": boundKeys
+                            "boundAppKey": m.boundApplicationKeys.map{ key in
+                                return key.index
+                            }
                         ]
                     }
 
@@ -415,6 +414,14 @@ private extension DoozMeshNetwork {
 
             result(map)
             
+        case .appKeys:
+            // Return application key indexes known to the network
+            let keys = meshNetwork.applicationKeys.map { appKey in
+                return appKey.index
+            }
+            result(keys)
+
+
         }
     }
 }
@@ -428,7 +435,6 @@ private extension DoozMeshNetwork{
     func _getId() -> String?{
         return meshNetwork.uuid.uuidString
     }
-    
 }
 
 public class CustomProvisioner : Codable{

@@ -25,6 +25,9 @@ abstract class IMeshNetwork {
   /// The currently defined group(s)
   Future<List<GroupData>> get groups;
 
+  /// The application keys defined in the network (list of appKey indexes)
+  Future<List<int>> get appKeys;
+
   /// The max address that the current selected provisioner can allocate
   Future<int> get highestAllocatableAddress;
 
@@ -336,6 +339,17 @@ class MeshNetwork implements IMeshNetwork {
     if (/* Platform.isIOS ||  */ Platform.isAndroid) {
       final result = await _methodChannel.invokeMethod<Map>('distributeNetKey', {'netKeyIndex': netKeyIndex});
       return NetworkKey.fromJson(Map<String, dynamic>.from(result!));
+    } else {
+      throw UnsupportedError('Platform ${Platform.operatingSystem} is not supported');
+    }
+  }
+
+  @override
+  Future<List<int>> get appKeys async {
+    if (Platform.isIOS || Platform.isAndroid) {
+      final result = await _methodChannel.invokeMethod<List>('appKeys');
+      // ensure list of ints
+      return result?.map((e) => e as int).toList() ?? <int>[];
     } else {
       throw UnsupportedError('Platform ${Platform.operatingSystem} is not supported');
     }

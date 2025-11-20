@@ -1,12 +1,12 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:nordic_nrf_mesh/nordic_nrf_mesh.dart';
 import 'package:nordic_nrf_mesh_example/src/views/control_module/provisioned_devices.dart';
 import 'package:nordic_nrf_mesh_example/src/views/home/home.dart';
 import 'package:nordic_nrf_mesh_example/src/views/scan_and_provisionning/scan_and_provisioning.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:nordic_nrf_mesh_example/src/views/group/tab_group.dart';
+import 'package:nordic_nrf_mesh_example/src/services/global_mesh.dart';
 
 const int homeTab = 0;
 const int provisioningTab = 1;
@@ -36,7 +36,8 @@ class NordicNrfMeshExampleApp extends StatefulWidget {
 class _NordicNrfMeshExampleAppState extends State<NordicNrfMeshExampleApp> {
   late final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>(debugLabel: 'main_scaffold');
-  late final NordicNrfMesh nordicNrfMesh = NordicNrfMesh();
+  // use global singleton `nordicNrfMesh` imported from services/global_mesh.dart
+  // (do not redeclare it here — reference the top-level `nordicNrfMesh` directly)
 
   int _bottomNavigationBarIndex = homeTab;
 

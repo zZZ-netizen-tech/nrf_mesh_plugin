@@ -27,6 +27,7 @@ enum DoozMeshNetworkChannel {
     case getMeshModelSubscriptions(_ data : MeshModelSubscriptionsArguments)
     case getNode(_ data : GetNodeArguments)
     case getGroupElementIds(_ data : GetGroupElementIdsArguments)
+    case appKeys
 
     case error(_ error: Error)
     
@@ -76,6 +77,8 @@ enum DoozMeshNetworkChannel {
                 self = .getNode(try GetNodeArguments(arguments))
             case "getGroupElementIds":
                 self = .getGroupElementIds(try GetGroupElementIdsArguments(arguments))
+            case "appKeys":
+                self = .appKeys
             default:
                 self = .error(FlutterCallError.notImplemented)
             }

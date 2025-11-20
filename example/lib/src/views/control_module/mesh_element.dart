@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:nordic_nrf_mesh/nordic_nrf_mesh.dart';
+import 'package:nordic_nrf_mesh_example/src/views/control_module/model_detail.dart';
 
 class MeshElement extends StatelessWidget {
   final ElementData element;
+  final MeshManagerApi? meshManagerApi;
 
-  const MeshElement(this.element, {Key? key}) : super(key: key);
+  const MeshElement(this.element, {Key? key, this.meshManagerApi}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +64,13 @@ class MeshElement extends StatelessWidget {
                           bound ? Icons.check_circle : Icons.radio_button_unchecked,
                           color: bound ? Colors.green : Colors.grey,
                         ),
-                        // you can add onTap to navigate to model detail
-                        onTap: () {
-                          // TODO: navigate to model details if needed
+                        // navigate to model details on tap
+                        onTap: () async {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => ModelDetailPage(model: model, element: element),
+                            ),
+                          );
                         },
                       ),
                       const Divider(height: 1),
