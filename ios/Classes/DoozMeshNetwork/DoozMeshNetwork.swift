@@ -415,9 +415,9 @@ private extension DoozMeshNetwork {
             result(map)
             
         case .appKeys:
-            // Return application key indexes known to the network
-            let keys = meshNetwork.applicationKeys.map { appKey in
-                return appKey.index
+            // Return list of application key info maps: { name, keyIndex }
+            let keys = meshNetwork.applicationKeys.map { appKey -> [String: Any] in
+                return ["name": appKey.name ?? "", "keyIndex": appKey.index]
             }
             result(keys)
 

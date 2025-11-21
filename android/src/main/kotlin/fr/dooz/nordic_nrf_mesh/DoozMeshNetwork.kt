@@ -293,8 +293,10 @@ class DoozMeshNetwork(private val binaryMessenger: BinaryMessenger, var meshNetw
                 result.success(subscribedAddresses)
             }
             "appKeys" -> {
-                // Return list of application key indexes
-                val keys = meshNetwork.getAppKeys().map { it.keyIndex }
+                // Return list of application key info maps: { name, keyIndex }
+                val keys = meshNetwork.getAppKeys().map {
+                    mapOf("name" to (it.name ?: ""), "keyIndex" to it.keyIndex)
+                }
                 result.success(keys)
             }
              "generateNetKey" -> {

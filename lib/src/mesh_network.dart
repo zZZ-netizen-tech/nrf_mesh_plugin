@@ -25,8 +25,8 @@ abstract class IMeshNetwork {
   /// The currently defined group(s)
   Future<List<GroupData>> get groups;
 
-  /// The application keys defined in the network (list of appKey indexes)
-  Future<List<int>> get appKeys;
+  /// The application keys defined in the network. Each entry is a map with keys `name` and `keyIndex`.
+  Future<List<Map<String, dynamic>>> get appKeys;
 
   /// The max address that the current selected provisioner can allocate
   Future<int> get highestAllocatableAddress;
@@ -345,11 +345,21 @@ class MeshNetwork implements IMeshNetwork {
   }
 
   @override
-  Future<List<int>> get appKeys async {
+  Future<List<Map<String, dynamic>>> get appKeys async {
     if (Platform.isIOS || Platform.isAndroid) {
       final result = await _methodChannel.invokeMethod<List>('appKeys');
-      // ensure list of ints
-      return result?.map((e) => e as int).toList() ?? <int>[];
+      if (result == null) return <Map<String, dynamic>>[];
+      // each item is expected to be a Map{name, keyIndex} or int (backwards compatibility)
+      return result.map<Map<String, dynamic>>((e) {
+        if (e is Map) return Map<String, dynamic>.from(e.cast<String, dynamic>());
+        if (e is int) return <String, dynamic>{'name': '', 'keyIndex': e};
+        // try to coerce common representations
+        if (e is String) {
+          final parsed = int.tryParse(e);
+          if (parsed != null) return <String, dynamic>{'name': '', 'keyIndex': parsed};
+        }
+        return <String, dynamic>{'name': '', 'keyIndex': null};
+      }).toList();
     } else {
       throw UnsupportedError('Platform ${Platform.operatingSystem} is not supported');
     }
