@@ -521,7 +521,13 @@ class __BindAppKeySheetState extends State<_BindAppKeySheet> {
 
       final status = await api.sendConfigModelAppBind(nodeId, widget.elementAddress, widget.modelId, appKeyIndex: index).timeout(const Duration(seconds: 10));
       if(status.elementAddress == widget.elementAddress && status.modelId == widget.modelId && status.appKeyIndex == index) {
-        if (mounted) Navigator.of(context).pop({'type': 'bind', 'success': true, 'appKeyIndex': index});
+        if(mounted) {
+          if (status.isSuccessful) {
+            Navigator.of(context).pop({'type': 'bind', 'success': true, 'appKeyIndex': index});
+          } else {
+            Navigator.of(context).pop({'type': 'bind', 'success': false, 'error': status.errorMessage});
+          }
+        }
       }
     } catch (e) {
       if (mounted) Navigator.of(context).pop({'type': 'bind', 'success': false, 'error': e.toString()});
@@ -974,7 +980,7 @@ class __SubscribeSheetState extends State<_SubscribeSheet> {
       final groups = await network.groups;
       final List<Map<String, dynamic>> groupsBuilt = [];
       for (final g in groups) {
-        groupsBuilt.add({'address': g.address, 'label': (g.name ?? '').toString()});
+        groupsBuilt.add({'address': g.address, 'label': (g.name).toString()});
       }
       if (mounted) setState(() => _groupOptions = groupsBuilt);
     } catch (_) {
@@ -999,7 +1005,7 @@ class __SubscribeSheetState extends State<_SubscribeSheet> {
         return;
       }
     }
-    _performSubscription(addr!);
+    _performSubscription(addr);
   }
 
   Future<void> _performSubscription(int addr) async {

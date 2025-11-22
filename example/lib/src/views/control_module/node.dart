@@ -8,7 +8,7 @@ class Node extends StatefulWidget {
   final ProvisionedMeshNode node;
   final MeshManagerApi meshManagerApi;
 
-  const Node({Key? key, required this.node, required this.meshManagerApi, required this.name}) : super(key: key);
+  const Node({super.key, required this.node, required this.meshManagerApi, required this.name});
 
   @override
   State<Node> createState() => _NodeState();

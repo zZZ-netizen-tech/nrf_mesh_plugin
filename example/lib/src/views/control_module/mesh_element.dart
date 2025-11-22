@@ -6,7 +6,7 @@ class MeshElement extends StatelessWidget {
   final ElementData element;
   final MeshManagerApi? meshManagerApi;
 
-  const MeshElement(this.element, {Key? key, this.meshManagerApi}) : super(key: key);
+  const MeshElement(this.element, {super.key, this.meshManagerApi});
 
   @override
   Widget build(BuildContext context) {

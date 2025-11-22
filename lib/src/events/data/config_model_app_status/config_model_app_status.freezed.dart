@@ -20,11 +20,13 @@ ConfigModelAppStatusData _$ConfigModelAppStatusDataFromJson(Map<String, dynamic>
 class _$ConfigModelAppStatusDataTearOff {
   const _$ConfigModelAppStatusDataTearOff();
 
-  _ConfigModelAppStatusData call(int elementAddress, int modelId, int appKeyIndex) {
+  _ConfigModelAppStatusData call(int elementAddress, int modelId, int appKeyIndex, bool isSuccessful,String errorMessage) {
     return _ConfigModelAppStatusData(
       elementAddress,
       modelId,
       appKeyIndex,
+      isSuccessful,
+      errorMessage,
     );
   }
 
@@ -41,6 +43,8 @@ mixin _$ConfigModelAppStatusData {
   int get elementAddress => throw _privateConstructorUsedError;
   int get modelId => throw _privateConstructorUsedError;
   int get appKeyIndex => throw _privateConstructorUsedError;
+  bool get isSuccessful => throw _privateConstructorUsedError;
+  String get errorMessage => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -52,7 +56,7 @@ abstract class $ConfigModelAppStatusDataCopyWith<$Res> {
   factory $ConfigModelAppStatusDataCopyWith(
           ConfigModelAppStatusData value, $Res Function(ConfigModelAppStatusData) then) =
       _$ConfigModelAppStatusDataCopyWithImpl<$Res>;
-  $Res call({int elementAddress, int modelId, int appKeyIndex});
+  $Res call({int elementAddress, int modelId, int appKeyIndex, bool isSuccessful, String errorMessage});
 }
 
 /// @nodoc
@@ -68,6 +72,8 @@ class _$ConfigModelAppStatusDataCopyWithImpl<$Res> implements $ConfigModelAppSta
     Object? elementAddress = freezed,
     Object? modelId = freezed,
     Object? appKeyIndex = freezed,
+    Object? isSuccessful = freezed,
+    Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
       elementAddress: elementAddress == freezed
@@ -82,6 +88,14 @@ class _$ConfigModelAppStatusDataCopyWithImpl<$Res> implements $ConfigModelAppSta
           ? _value.appKeyIndex
           : appKeyIndex // ignore: cast_nullable_to_non_nullable
               as int,
+      isSuccessful: isSuccessful == freezed
+          ? _value.isSuccessful
+          : isSuccessful // ignore: cast_nullable_to_non_nullable
+              as bool,
+      errorMessage: errorMessage == freezed
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -92,7 +106,7 @@ abstract class _$ConfigModelAppStatusDataCopyWith<$Res> implements $ConfigModelA
           _ConfigModelAppStatusData value, $Res Function(_ConfigModelAppStatusData) then) =
       __$ConfigModelAppStatusDataCopyWithImpl<$Res>;
   @override
-  $Res call({int elementAddress, int modelId, int appKeyIndex});
+  $Res call({int elementAddress, int modelId, int appKeyIndex, bool isSuccessful, String errorMessage});
 }
 
 /// @nodoc
@@ -110,6 +124,8 @@ class __$ConfigModelAppStatusDataCopyWithImpl<$Res> extends _$ConfigModelAppStat
     Object? elementAddress = freezed,
     Object? modelId = freezed,
     Object? appKeyIndex = freezed,
+    Object? isSuccessful = freezed,
+    Object? errorMessage = freezed,
   }) {
     return _then(_ConfigModelAppStatusData(
       elementAddress == freezed
@@ -124,6 +140,14 @@ class __$ConfigModelAppStatusDataCopyWithImpl<$Res> extends _$ConfigModelAppStat
           ? _value.appKeyIndex
           : appKeyIndex // ignore: cast_nullable_to_non_nullable
               as int,
+      isSuccessful == freezed
+          ? _value.isSuccessful
+          : isSuccessful // ignore: cast_nullable_to_non_nullable
+              as bool,
+      errorMessage == freezed
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -131,7 +155,7 @@ class __$ConfigModelAppStatusDataCopyWithImpl<$Res> extends _$ConfigModelAppStat
 /// @nodoc
 @JsonSerializable()
 class _$_ConfigModelAppStatusData implements _ConfigModelAppStatusData {
-  const _$_ConfigModelAppStatusData(this.elementAddress, this.modelId, this.appKeyIndex);
+  const _$_ConfigModelAppStatusData(this.elementAddress, this.modelId, this.appKeyIndex, this.isSuccessful, this.errorMessage);
 
   factory _$_ConfigModelAppStatusData.fromJson(Map<String, dynamic> json) =>
       _$_$_ConfigModelAppStatusDataFromJson(json);
@@ -142,10 +166,14 @@ class _$_ConfigModelAppStatusData implements _ConfigModelAppStatusData {
   final int modelId;
   @override
   final int appKeyIndex;
+  @override
+  final bool isSuccessful;
+  @override
+  final String errorMessage;
 
   @override
   String toString() {
-    return 'ConfigModelAppStatusData(elementAddress: $elementAddress, modelId: $modelId, appKeyIndex: $appKeyIndex)';
+    return 'ConfigModelAppStatusData(elementAddress: $elementAddress, modelId: $modelId, appKeyIndex: $appKeyIndex,isSuccessful: $isSuccessful,errorMessage: $errorMessage)';
   }
 
   @override
@@ -164,7 +192,9 @@ class _$_ConfigModelAppStatusData implements _ConfigModelAppStatusData {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(elementAddress) ^
       const DeepCollectionEquality().hash(modelId) ^
-      const DeepCollectionEquality().hash(appKeyIndex);
+      const DeepCollectionEquality().hash(appKeyIndex) ^
+      const DeepCollectionEquality().hash(isSuccessful) ^
+      const DeepCollectionEquality().hash(errorMessage);
 
   @JsonKey(ignore: true)
   @override
@@ -178,7 +208,7 @@ class _$_ConfigModelAppStatusData implements _ConfigModelAppStatusData {
 }
 
 abstract class _ConfigModelAppStatusData implements ConfigModelAppStatusData {
-  const factory _ConfigModelAppStatusData(int elementAddress, int modelId, int appKeyIndex) =
+  const factory _ConfigModelAppStatusData(int elementAddress, int modelId, int appKeyIndex, bool isSuccessful,String errorMessage) =
       _$_ConfigModelAppStatusData;
 
   factory _ConfigModelAppStatusData.fromJson(Map<String, dynamic> json) = _$_ConfigModelAppStatusData.fromJson;
@@ -189,6 +219,10 @@ abstract class _ConfigModelAppStatusData implements ConfigModelAppStatusData {
   int get modelId => throw _privateConstructorUsedError;
   @override
   int get appKeyIndex => throw _privateConstructorUsedError;
+  @override
+  bool get isSuccessful => throw _privateConstructorUsedError;
+  @override
+  String get errorMessage => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$ConfigModelAppStatusDataCopyWith<_ConfigModelAppStatusData> get copyWith => throw _privateConstructorUsedError;

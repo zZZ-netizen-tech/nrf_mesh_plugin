@@ -21,10 +21,20 @@ extension DoozMeshManagerApi: MeshNetworkDelegate{
                     EventSinkKeys.message.elementAddress.rawValue: status.elementAddress,
                     EventSinkKeys.message.modelId.rawValue: status.modelId,
                     EventSinkKeys.message.appKeyIndex.rawValue: status.applicationKeyIndex,
-                    
+                    EventSinkKeys.message.isSuccessful.rawValue: true,
                 ]
                 _sendFlutterMessage(message)
             } else {
+                let message: FlutterMessage = [
+                    EventSinkKeys.eventName.rawValue: MessageEvent.onConfigModelAppStatus.rawValue,
+                    EventSinkKeys.message.elementAddress.rawValue: status.elementAddress,
+                    EventSinkKeys.message.modelId.rawValue: status.modelId,
+                    EventSinkKeys.message.appKeyIndex.rawValue: status.applicationKeyIndex,
+                    EventSinkKeys.message.isSuccessful.rawValue: false,
+                    EventSinkKeys.message.errorMessage.rawValue:  status.message,
+                    
+                ]
+                _sendFlutterMessage(message)
                 break
             }
         case is ConfigCompositionDataStatus:

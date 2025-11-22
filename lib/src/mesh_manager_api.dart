@@ -541,7 +541,7 @@ class MeshManagerApi {
     final status = _onConfigModelAppStatusController.stream.firstWhere(
       (element) =>
           element.elementAddress == elementId && element.modelId == modelId && element.appKeyIndex == appKeyIndex,
-      orElse: () => const ConfigModelAppStatusData(-1, -1, -1),
+      orElse: () => const ConfigModelAppStatusData(-1, -1, -1, false, ""),
     );
     await _methodChannel.invokeMethod('sendConfigModelAppBind', {
       'nodeId': nodeId,

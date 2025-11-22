@@ -122,6 +122,9 @@ enum MessageEvent: String{
 
 enum EventSinkKeys: String{
     enum message: String{
+        //add by 2025-11-21 错误信息 当isSuccessful为false时返回
+        case errorMessage
+        
         case elementAddress
         case modelId
         case appKeyIndex

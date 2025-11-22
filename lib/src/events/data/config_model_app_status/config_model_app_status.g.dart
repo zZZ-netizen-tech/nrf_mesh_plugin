@@ -11,6 +11,8 @@ _$_ConfigModelAppStatusData _$_$_ConfigModelAppStatusDataFromJson(Map<String, dy
     json['elementAddress'] as int,
     json['modelId'] as int,
     json['appKeyIndex'] as int,
+    json['isSuccessful'] as bool,
+    json['errorMessage'] as String? ??'',
   );
 }
 
@@ -18,4 +20,6 @@ Map<String, dynamic> _$_$_ConfigModelAppStatusDataToJson(_$_ConfigModelAppStatus
       'elementAddress': instance.elementAddress,
       'modelId': instance.modelId,
       'appKeyIndex': instance.appKeyIndex,
+      'isSuccessful': instance.isSuccessful,
+      'errorMessage': instance.errorMessage,
     };
