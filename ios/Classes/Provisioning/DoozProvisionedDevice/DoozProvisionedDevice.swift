@@ -68,6 +68,41 @@ private extension DoozProvisionedDevice {
         case .name:
             result(node.name)
             break
+        case .networkKeys:
+            // Return list of network key info known to this node as dictionaries with NetworkKey fields
+            func hex(_ data: Data?) -> String? {
+                guard let d = data else { return nil }
+                return d.map { String(format: "%02x", $0) }.joined()
+            }
+            let keysSource = node.networkKeys
+            let infos = keysSource.map { nk -> [String: Any] in
+                return [
+                    "index": Int(nk.index),
+                    "name": nk.name,
+                    "key": hex(nk.key) ?? NSNull(),
+                    "phase": nk.phase.rawValue,
+                    "networkId": hex(nk.networkId) ?? NSNull()
+                ]
+            }
+            result(infos)
+            break
+        case .applicationKeys:
+            func hex(_ data: Data?) -> String? {
+                guard let d = data else { return nil }
+                return d.map { String(format: "%02x", $0) }.joined()
+            }
+            let appKeys = node.applicationKeys
+            let appInfos = appKeys.map { ak -> [String: Any] in
+                return [
+                    "index": Int(ak.index),
+                    "name": ak.name,
+                    "key": hex(ak.key) ?? NSNull(),
+                    "oldKey": hex(ak.oldKey) ?? NSNull(),
+                    "boundNetworkKeyIndex": Int(ak.boundNetworkKeyIndex)
+                ]
+            }
+            result(appInfos)
+            break
         case .elements:
             let elements = node.elements.map { element in
                 return [
@@ -102,4 +137,3 @@ private extension DoozProvisionedDevice {
         
     }
 }
-

@@ -9,6 +9,8 @@ enum DoozProvisionedMeshNodeChannel {
     case unicastAddress
     case nodeName(_ data: NodeNameArguments)
     case name
+    case networkKeys
+    case applicationKeys
     case elements
     case elementAt
 
@@ -25,17 +27,21 @@ enum DoozProvisionedMeshNodeChannel {
                 self = .nodeName(try NodeNameArguments(arguments))
             case "name":
                 self = .name
+            case "networkKeys":
+                self = .networkKeys
+            case "applicationKeys":
+                self = .applicationKeys
             case "elements":
                 self = .elements
             case "elementAt":
                 self = .elementAt
-            
+
             default:
                 self = .error(FlutterCallError.notImplemented)
             }
         }catch{
             self = .error(error)
         }
-        
+
     }
 }

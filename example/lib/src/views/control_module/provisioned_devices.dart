@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +13,7 @@ import 'package:nordic_nrf_mesh_example/src/views/control_module/node_view.dart'
 class ProvisionedDevices extends StatefulWidget {
   final NordicNrfMesh nordicNrfMesh;
 
-  const ProvisionedDevices({Key? key, required this.nordicNrfMesh}) : super(key: key);
+  const ProvisionedDevices({super.key, required this.nordicNrfMesh});
 
   @override
   State<ProvisionedDevices> createState() => _ProvisionedDevicesState();

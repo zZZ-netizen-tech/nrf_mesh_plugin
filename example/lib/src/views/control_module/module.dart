@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
@@ -18,11 +17,11 @@ class Module extends StatefulWidget {
   final VoidCallback onDisconnect;
 
   const Module({
-    Key? key,
+    super.key,
     required this.device,
     required this.meshManagerApi,
     required this.onDisconnect,
-  }) : super(key: key);
+  });
 
   @override
   State<Module> createState() => _ModuleState();

@@ -80,4 +80,93 @@ class ProvisionedMeshNode {
     final elements = await _methodChannel.invokeMethod<List>('elements');
     return elements!.map((e) => ElementData.fromJson(e)).toList();
   }
+
+  /// Will return the list of network key info known to this node
+  /// Normalized entries include: { 'index': int?, 'name': String?, 'key': String?, 'phase': String?, 'networkId': String?, 'updated': bool }
+  Future<List<Map<String, dynamic>>> get networkKeys async {
+    final keys = await _methodChannel.invokeMethod<List>('networkKeys');
+    if (keys == null) return [];
+    return keys.map<Map<String, dynamic>>((k) {
+      // Default normalized map
+      var normalized = <String, dynamic>{'index': null, 'name': null, 'key': null, 'phase': null, 'networkId': null, 'updated': false};
+      if (k is Map) {
+        final map = Map<String, dynamic>.from(k.cast<String, dynamic>());
+        // index could be under 'index', 'keyIndex', or as a string
+        final idxVal = map['index'] ?? map['keyIndex'] ?? map['idx'] ?? map['key'];
+        if (idxVal is num) {
+          normalized['index'] = idxVal.toInt();
+        } else if (idxVal is String) {
+          final parsed = int.tryParse(idxVal);
+          if (parsed != null) normalized['index'] = parsed;
+        } else if (idxVal is Map && idxVal['index'] is num) {
+          normalized['index'] = (idxVal['index'] as num).toInt();
+        }
+
+        // name
+        if (map['name'] != null) normalized['name'] = map['name'].toString();
+        // key (may be hex string)
+        if (map['key'] != null) normalized['key'] = map['key'].toString();
+        // phase
+        if (map['phase'] != null) normalized['phase'] = map['phase'].toString();
+        // networkId might be Data / bytes or hex string
+        if (map['networkId'] != null) {
+          final nid = map['networkId'];
+          if (nid is String) normalized['networkId'] = nid;
+          else if (nid is List) {
+            // list of ints -> hex
+            try {
+              normalized['networkId'] = nid.map<int>((e) => (e as num).toInt()).map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+            } catch (_) {}
+          }
+        }
+        // updated flag could be 'updated' or 'isUpdated'
+        if (map['updated'] is bool) normalized['updated'] = map['updated'] as bool;
+        else if (map['isUpdated'] is bool) normalized['updated'] = map['isUpdated'] as bool;
+        else if (map['updated'] is num) normalized['updated'] = (map['updated'] as num) != 0;
+      } else if (k is num) {
+        normalized['index'] = k.toInt();
+      } else if (k is String) {
+        final parsed = int.tryParse(k);
+        if (parsed != null) normalized['index'] = parsed;
+      }
+      return normalized;
+    }).toList();
+  }
+
+  /// Will return the list of application key info known to this node
+  /// Normalized entries include: { 'index': int?, 'name': String?, 'key': String?, 'updated': bool }
+  Future<List<Map<String, dynamic>>> get applicationKeys async {
+    final keys = await _methodChannel.invokeMethod<List>('applicationKeys');
+    if (keys == null) return [];
+    return keys.map<Map<String, dynamic>>((k) {
+      var normalized = <String, dynamic>{'index': null, 'name': null, 'key': null, 'updated': false};
+      if (k is Map) {
+        final map = Map<String, dynamic>.from(k.cast<String, dynamic>());
+        final idxVal = map['index'] ?? map['keyIndex'] ?? map['idx'];
+        if (idxVal is num) {
+          normalized['index'] = idxVal.toInt();
+        } else if (idxVal is String) {
+          final parsed = int.tryParse(idxVal);
+          if (parsed != null) normalized['index'] = parsed;
+        }
+        if (map['name'] != null) normalized['name'] = map['name'].toString();
+        if (map['key'] != null) normalized['key'] = map['key'].toString();
+        if (map['updated'] is bool) {
+          normalized['updated'] = map['updated'] as bool;
+        } else if (map['isUpdated'] is bool) {
+          normalized['updated'] = map['isUpdated'] as bool;
+        }
+        else if (map['updated'] is num) {
+          normalized['updated'] = (map['updated'] as num) != 0;
+        }
+      } else if (k is num) {
+        normalized['index'] = k.toInt();
+      }
+      else if (k is String) {
+        final parsed = int.tryParse(k);
+        if (parsed != null) normalized['index'] = parsed;
+      }
+      return normalized;
+    }).toList();
+  }
 }

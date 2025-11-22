@@ -4,7 +4,7 @@ import 'package:nordic_nrf_mesh/nordic_nrf_mesh.dart';
 class Model extends StatelessWidget {
   final ModelData model;
 
-  const Model(this.model, {Key? key}) : super(key: key);
+  const Model(this.model, {super.key});
 
   @override
   Widget build(BuildContext context) {
