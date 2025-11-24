@@ -219,8 +219,13 @@ private extension DoozMeshManagerApi {
             
             let stepResolution = StepResolution(rawValue: UInt8(data.transitionResolution))!
             let transitionTime = TransitionTime(steps: UInt8(data.transitionStep), stepResolution: stepResolution)
-            
-            let message = GenericLevelSet(level: Int16(data.level), transitionTime: transitionTime, delay: UInt8(data.delay))
+
+            let message: MeshMessage
+            if data.ack {
+                message = GenericLevelSet(level: Int16(data.level), transitionTime: transitionTime, delay: UInt8(data.delay))
+            }else{
+                message = GenericLevelSetUnacknowledged(level: Int16(data.level), transitionTime: transitionTime, delay: UInt8(data.delay))
+            }
             do{
                 
                 _ = try meshNetworkManager.send(
@@ -248,7 +253,18 @@ private extension DoozMeshManagerApi {
             let stepResolution = StepResolution(rawValue: UInt8(data.transitionResolution))!
             let transitionTime = TransitionTime(steps: UInt8(data.transitionStep), stepResolution: stepResolution)
             
-            let message = GenericOnOffSet(data.value, transitionTime: transitionTime, delay: UInt8(data.delay))
+            let message: MeshMessage
+            guard let address = Address(exactly: data.address) else {
+                let error = MeshNetworkError.invalidAddress
+                let nsError = error as NSError
+                result(FlutterError(code: String(nsError.code), message: nsError.localizedDescription, details: nil))
+                return
+            }
+            if address.isGroup {
+                message = GenericOnOffSetUnacknowledged(data.value, transitionTime: transitionTime, delay: UInt8(data.delay))
+            }else{
+                message = GenericOnOffSet(data.value, transitionTime: transitionTime, delay: UInt8(data.delay))
+            }
             
             do{
                 _ = try meshNetworkManager.send(
@@ -256,7 +272,7 @@ private extension DoozMeshManagerApi {
                     to: MeshAddress(Address(exactly: data.address)!),
                     using: appKey
                 )
-                result(nil)
+                result(address.isGroup)
             }catch{
                 let nsError = error as NSError
                 result(FlutterError(code: String(nsError.code), message: nsError.localizedDescription, details: nil))

@@ -12,4 +12,5 @@ struct SendGenericLevelSetArguments: BaseFlutterArguments {
     let transitionStep: Int
     let transitionResolution: Int
     let delay: Int
+    let ack: Bool
 }

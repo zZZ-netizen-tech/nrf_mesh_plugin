@@ -420,6 +420,7 @@ class MeshManagerApi {
     int transitionStep = 0,
     int transitionResolution = 0,
     int delay = 0,
+    bool ack = false,
   }) async {
     final status = _onGenericLevelStatusController.stream.firstWhere(
       (element) => element.source == address,
@@ -432,8 +433,13 @@ class MeshManagerApi {
       'transitionStep': transitionStep,
       'transitionResolution': transitionResolution,
       'delay': delay,
+      'ack': ack,
     });
-    return status;
+    if(ack) {
+      return status;
+    }else{
+      return Future.value(const GenericLevelStatusData(-1, -1, -1, -1, -1, -1));
+    }
   }
 
   /// Will send a GenericLevelGet message to the given [address].
@@ -466,7 +472,7 @@ class MeshManagerApi {
       (element) => element.source == address && element.presentState == value,
       orElse: () => const GenericOnOffStatusData(-1, false, false, -1, -1),
     );
-    await _methodChannel.invokeMethod('sendGenericOnOffSet', {
+    final bool isGroup = await _methodChannel.invokeMethod('sendGenericOnOffSet', {
       'address': address,
       'value': value,
       'sequenceNumber': sequenceNumber,
@@ -475,7 +481,11 @@ class MeshManagerApi {
       'transitionResolution': transitionResolution,
       'delay': delay,
     });
-    return status;
+    if(isGroup == true) {//组播地址使用unacknowledged方式发送，不会有回复
+      return Future.value(const GenericOnOffStatusData(-1, false, false, -1, -1));
+    }else{
+      return status;
+    }
   }
 
   /// Will send a MagicLevelSet message to the given [address].

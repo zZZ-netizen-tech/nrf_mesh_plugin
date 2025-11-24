@@ -7,7 +7,7 @@ import 'package:nordic_nrf_mesh/nordic_nrf_mesh.dart';
 class SendGenericOnOff extends StatefulWidget {
   final MeshManagerApi meshManagerApi;
 
-  const SendGenericOnOff({Key? key, required this.meshManagerApi}) : super(key: key);
+  const SendGenericOnOff({super.key, required this.meshManagerApi});
 
   @override
   State<SendGenericOnOff> createState() => _SendGenericOnOffState();
