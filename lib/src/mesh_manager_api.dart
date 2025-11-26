@@ -572,11 +572,12 @@ class MeshManagerApi {
           element.subscriptionAddress == subscriptionAddress,
       orElse: () => const ConfigModelSubscriptionStatus(-1, -1, -1, -1, -1, false),
     );
-    await _methodChannel.invokeMethod('sendConfigModelSubscriptionAdd', {
+    final success = await _methodChannel.invokeMethod('sendConfigModelSubscriptionAdd', {
       'elementAddress': elementAddress,
       'subscriptionAddress': subscriptionAddress,
       'modelIdentifier': modelIdentifier,
     });
+    print('sendConfigModelSubscriptionAdd success: $success');
     return status;
   }
 

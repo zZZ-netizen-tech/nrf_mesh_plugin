@@ -73,7 +73,10 @@ class ProvisionedMeshNode {
   set nodeName(String name) => _methodChannel.invokeMethod('nodeName', {'name': name});
 
   /// Will return the name of this node as stored in the local database
-  Future<String> get name async => (await _methodChannel.invokeMethod<String>('name'))!;
+  Future<String> get name async  {
+        final name = await _methodChannel.invokeMethod<String>('name');
+        return name ?? 'Unnamed Node';
+  }
 
   /// Will return the list of elements of this node as stored in the local database
   Future<List<ElementData>> get elements async {

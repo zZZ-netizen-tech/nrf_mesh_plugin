@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nordic_nrf_mesh/nordic_nrf_mesh.dart';
 import 'package:nordic_nrf_mesh_example/src/widgets/group.dart' as widgets;
+import 'package:nordic_nrf_mesh_example/src/views/group/device_list.dart';
+import 'package:nordic_nrf_mesh_example/src/views/group/group_detail.dart';
 
 /// A simple page that lists groups from the loaded mesh network.
 class GroupsPage extends StatefulWidget {
   final NordicNrfMesh nordicNrfMesh;
-  const GroupsPage({Key? key, required this.nordicNrfMesh}) : super(key: key);
+  const GroupsPage({super.key, required this.nordicNrfMesh});
 
   @override
   State<GroupsPage> createState() => _GroupsPageState();
@@ -183,58 +185,72 @@ class _GroupsPageState extends State<GroupsPage> {
                         itemCount: _groups.length,
                         itemBuilder: (context, index) {
                           final g = _groups[index];
-                          return Card(
-                            margin: const EdgeInsets.symmetric(vertical: 6),
-                            child: Column(
-                              children: [
-                                widgets.Group(g, _meshNetwork!),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
-                                      child: _deleting.contains(g.address)
-                                          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                                          : IconButton(
-                                              icon: const Icon(Icons.delete, color: Colors.redAccent),
-                                              onPressed: () async {
-                                                final confirm = await showDialog<bool>(
-                                                  context: context,
-                                                  builder: (c) => AlertDialog(
-                                                    title: const Text('Delete group'),
-                                                    content: Text('Are you sure you want to delete group "${g.name}" (${g.address})?'),
-                                                    actions: [
-                                                      TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel')),
-                                                      TextButton(onPressed: () => Navigator.pop(c, true), child: const Text('Delete')),
-                                                    ],
-                                                  ),
-                                                );
-                                                if (confirm != true) return;
+                          return InkWell(
+                            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (c) => GroupDetailPage(meshNetwork: _meshNetwork!, groupAddress: g.address))),
+                            child: Card(
+                              margin: const EdgeInsets.symmetric(vertical: 6),
+                              child: Column(
+                                children: [
+                                  widgets.Group(g, _meshNetwork!),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      // Add device button (functionality not implemented yet)
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+                                        child: IconButton(
+                                          icon: const Icon(Icons.person_add, color: Colors.blueAccent),
+                                          tooltip: '添加设备',
+                                          onPressed: () {
+                                            Navigator.of(context).push(MaterialPageRoute(builder: (c) => MeshDeviceListPage(meshNetwork: _meshNetwork!, groupAddress: g.address)));
+                                          },
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+                                        child: _deleting.contains(g.address)
+                                            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                                            : IconButton(
+                                                icon: const Icon(Icons.delete, color: Colors.redAccent),
+                                                onPressed: () async {
+                                                  final confirm = await showDialog<bool>(
+                                                    context: context,
+                                                    builder: (c) => AlertDialog(
+                                                      title: const Text('Delete group'),
+                                                      content: Text('Are you sure you want to delete group "${g.name}" (${g.address})?'),
+                                                      actions: [
+                                                        TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel')),
+                                                        TextButton(onPressed: () => Navigator.pop(c, true), child: const Text('Delete')),
+                                                      ],
+                                                    ),
+                                                  );
+                                                  if (confirm != true) return;
 
-                                                setState(() {
-                                                  _deleting.add(g.address);
-                                                });
-                                                try {
-                                                  await _meshNetwork!.removeGroup(g.address);
-                                                  scaffoldMessenger.showSnackBar(const SnackBar(content: Text('Group deleted')));
-                                                  await _loadGroups();
-                                                } on PlatformException catch (e) {
-                                                  scaffoldMessenger.showSnackBar(SnackBar(content: Text(e.message ?? 'Platform error')));
-                                                } catch (e) {
-                                                  scaffoldMessenger.showSnackBar(SnackBar(content: Text('Failed to delete group: ${e.toString()}')));
-                                                } finally {
-                                                  if (mounted) {
-                                                    setState(() {
-                                                      _deleting.remove(g.address);
-                                                    });
+                                                  setState(() {
+                                                    _deleting.add(g.address);
+                                                  });
+                                                  try {
+                                                    await _meshNetwork!.removeGroup(g.address);
+                                                    scaffoldMessenger.showSnackBar(const SnackBar(content: Text('Group deleted')));
+                                                    await _loadGroups();
+                                                  } on PlatformException catch (e) {
+                                                    scaffoldMessenger.showSnackBar(SnackBar(content: Text(e.message ?? 'Platform error')));
+                                                  } catch (e) {
+                                                    scaffoldMessenger.showSnackBar(SnackBar(content: Text('Failed to delete group: ${e.toString()}')));
+                                                  } finally {
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        _deleting.remove(g.address);
+                                                      });
+                                                    }
                                                   }
-                                                }
-                                              },
-                                            ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                                },
+                                              ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

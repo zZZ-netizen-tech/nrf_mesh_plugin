@@ -73,39 +73,6 @@ class _ProvisionedDevicesState extends State<ProvisionedDevices> {
                         });
                         // return early: we intentionally stop here to let UI switch to Module
                         return;
-                        final bleMeshManager = BleMeshManager();
-                        final device = _devices.elementAt(i);
-
-                        // 显示连接进度
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (_) => const Center(child: CircularProgressIndicator()),
-                        );
-
-                        try {
-                          await bleMeshManager.connect(device);
-                          Navigator.of(context).pop(); // 关闭进度弹窗
-
-                          // 构造 Node 对象（根据你的 node_view.dart 需求调整参数）
-                          final node = Node(
-                            name: device.name.isEmpty ? device.id : device.name,
-                            primaryUnicastAddress: 1, // 这里用占位，实际可从 meshManagerApi 获取
-                          );
-
-                          // 跳转到 NodeViewPage
-                          await Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => NodeViewPage(node: node)),
-                          );
-
-                          // 返回后断开连接
-                          await bleMeshManager.disconnect();
-                        } catch (e) {
-                          Navigator.of(context).pop(); // 关闭进度弹窗
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('连接失败: $e')),
-                          );
-                        }
                       },
                     ),
                 ],

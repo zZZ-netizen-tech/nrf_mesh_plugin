@@ -137,6 +137,7 @@ Future<ProvisionedMeshNode> _provisioning(
         await _connect(bleMeshManager, device!);
         isHandlingConnectErrors = false;
         provisionedMeshNode = ProvisionedMeshNode(event.meshNode!.uuid);
+        provisionedMeshNode.nodeName = device.name;
       } catch (e) {
         const msg = 'Error in connection during provisioning process';
         _log('$msg $e');

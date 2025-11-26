@@ -54,7 +54,7 @@ class _ScanningAndProvisioningState extends State<ScanningAndProvisioning> {
         final serviceData = device.serviceData[meshProvisioningUuid];
         if (serviceData != null) {
           final deviceUuid = Uuid.parse(_meshManagerApi.getDeviceUuid(serviceData.toList()));
-          debugPrint('deviceUuid: $deviceUuid');
+          debugPrint('deviceUuid: $deviceUuid'+', name: ${device.name}');
           _serviceData[device.id] = deviceUuid;
           _devices.add(device);
           setState(() {});
@@ -175,7 +175,7 @@ class _ScanningAndProvisioningState extends State<ScanningAndProvisioning> {
 class ProvisioningDialog extends StatelessWidget {
   final ProvisioningEvent provisioningEvent;
 
-  const ProvisioningDialog({Key? key, required this.provisioningEvent}) : super(key: key);
+  const ProvisioningDialog({super.key, required this.provisioningEvent});
 
   @override
   Widget build(BuildContext context) {
